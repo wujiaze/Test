@@ -1,0 +1,2 @@
+﻿Instantiate 方法中，当实例化对象身上的脚本中在Awake（）中设置了位置，还是会被Instantiate 中的参数覆盖
+即Instantiate 后执行

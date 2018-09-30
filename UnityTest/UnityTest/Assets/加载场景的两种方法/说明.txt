@@ -1,0 +1,2 @@
+﻿ SceneManager.LoadScene 和  SceneManager.LoadSceneAsync
+都会让方法执行完毕，再进入下一个场景

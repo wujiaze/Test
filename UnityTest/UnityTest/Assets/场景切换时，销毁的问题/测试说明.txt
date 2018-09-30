@@ -1,0 +1,1 @@
+﻿DontDestroyOnLoad（） 函数不会销毁本对象，以及本对象的子对象

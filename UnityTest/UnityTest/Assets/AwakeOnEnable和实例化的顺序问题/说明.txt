@@ -1,0 +1,3 @@
+﻿总结得到：
+控制脚本实例化一个对象时，当运行到 GameObject newcp = Instantiate(cp) 这步时，
+会去运行实例化出来的对象身上的所有脚本中的Awake 和 OnEnable,然后控制脚本才会继续运行
