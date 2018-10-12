@@ -1,0 +1,2 @@
+﻿透明图片或者图片的Alpha值为0，都是不能穿透射线的
+只有 将 Raycast Target 为 false时，任何图片和任何Alpha值都可以穿透射线，实现UI事件
