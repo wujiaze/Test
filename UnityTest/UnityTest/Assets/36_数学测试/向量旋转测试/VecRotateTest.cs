@@ -75,6 +75,10 @@ public class VecRotateTest : MonoBehaviour
         print("fin1   " + fin1);
         Vector3 fin2 = Quaternion.Euler(new Vector3(90, 0, 0)) * Vector2.left;
         print("fin2   " + fin2);
+
+
+        print("------------");
+        print(Vector3.zero.normalized);
     }
 
 }
