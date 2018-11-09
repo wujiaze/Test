@@ -1,18 +1,23 @@
 ﻿/*
  *      Vector2 结构体解析
  *      基础
- *      向量点乘 (a1,b1,c1,d1,....) * (a2,b2,c2,d2,....) = a1*a2 + b1*b2 + c1*c2 + d1*d2....
- *      三维向量叉乘 (a1,b1,c1) x (a2,b2,c2) = (b1*c2-b2*c1,a1*c2-a2*c1,a1*b2-a2*b1)
- *      二维向量的叉乘(a1,b1,0) x (a2,b2,0) = (0,0,a1*b2-a2*b1); 几何上是不存在的但是可以拿来用
+ *         代数
+ *          向量点乘 (a1,b1,c1,d1,....) * (a2,b2,c2,d2,....) = a1*a2 + b1*b2 + c1*c2 + d1*d2....
+ *          三维向量叉乘 (a1,a2,a3) x (b1,b2,b3) = (a2*b3 - a3*b2,a3*b1-a1*b3,a1*b2-a2*b1)  获取代数式 https://en.wikipedia.org/wiki/Cross_product
+ *          二维向量的叉乘(a1,a2,0) x (b1,b2,0) = (0,0,a1*b2-a2*b1); 几何上是不存在的但是可以拿来用
+ *         几何（二维 和 三维 有效）
+ *          向量点乘 a * b = |a| * |b| * cosα
+ *          向量叉乘 a x b 长度：|a| * |b| * sinα    方向可用代数中的Z轴判断，或者右手定则
  *      一、分类
  *          1、基础类
  *              1.1、静态常数
- *                      Vector2.up                  (0, 1)
- *                      Vector2.down                (0,-1)
- *                      Vector2.left                (-1,0)
- *                      Vector2.right               ( 1,0)
- *                      Vector2.one                 ( 1,1)
- *                      Vector2.zero                ( 0,0)
+ *                      可以用Vector2[0,1]来分别表示 x,y
+ *                      Vector2.up                  ( 0, 1)
+ *                      Vector2.down                ( 0,-1)
+ *                      Vector2.left                (-1, 0)
+ *                      Vector2.right               ( 1, 0)
+ *                      Vector2.one                 ( 1, 1)
+ *                      Vector2.zero                ( 0, 0)
  *                      Vector2.positiveInfinity    (正无穷，正无穷)
  *                      Vector2.negativeInfinity    (负无穷，负无穷)
  *              1.2、数值转换
@@ -24,7 +29,8 @@
  *                      Vector2.Max             返回一个新的 Vector2 ,x 为两个向量.x中较大的那个，y 为两个向量.y中较大的那个
  *                      Vector2.Min             返回一个新的 Vector2 ,x 为两个向量.x中较小的那个，y 为两个向量.y中较小的那个
  *                      Vector2.ClampMagnitude  限制向量长度，当向量小于等于限制长度时，返回原向量，当向量大于限制长度时，返回限制长度的向量
- *                      Vector2.Distance        返回两向量之间的距离      
+ *                      Vector2.Distance        返回两向量之间的距离,当只需要比较大小时，推荐(a-b).sqrMagnitude
+ *                      Vector2.Scale           缩放向量，原向量.x * sclae.x   原向量.y * sclae.y
  *                      Vector2.Dot             向量点乘  a1*a2+b1*b2
  *                                              源码：a.x*b.x + a.y*b.y   
  *                                              用途:1、根据几何意义，可以用Acos求夹角，可以用来判断一个向量对另一个向量是否可见
@@ -33,17 +39,17 @@
  *                                                   4、返回值大于0，结合其他(比如长度) ，判断在前方
  *                                                      返回值小于0，结合其他(比如长度) ，判断在后方
  *                                                      返回值等于0，结合其他(比如长度) ，判断在左边或右边(可再结合三维的叉乘)
- *                      Vector2.Scale           缩放向量，原向量.x * sclae.x   原向量.y * sclae.y
+ *                      
  *              1.4、曲线变换
  *                      Vector2.LerpUnclamped   线性变换（对 t 没有限制）
  *                                              原理：对两向量的x,y 分别使用 Mathf.LerpUnclamped
  *                                                    也可以整体理解，将 向量看作一个整体，进行线性插值
  *          2、复合类
- *              2.1、
+ *              2.1、数值处理
  *                      Vector2.Angle           两向量的夹角，内部采用了 Vector2.Dot 点乘来计算角度
  *                                              由于同一个cosA ,可能有正负两个值，这里直接取了正值
  *                                              角度的范围[0,180]
- *                      Vector2.SignedAngle     两向量的夹角，先通过 Vector2.Angle 求值，在通过叉乘的Z轴的正负，来判断角的正负
+ *                      Vector2.SignedAngle     两向量的夹角，先通过 Vector2.Angle 求值，在通过叉乘的Z轴的正负，来判断角的正负 左手法则
  *                                              又由于 Mathf.sign: 0 为正，所以角度的取值范围(-180,180]
  *                      Vector2.Reflect         求 direction 相对于 法向量 normal 的 反射向量
  *                                              准确的条件: 法向量必须是 标准化向量
@@ -63,7 +69,14 @@ public class Vector2Test : MonoBehaviour
     public Transform SmoothCube;
     void Start()
     {
+        // Reflect 不管法向量是什么方向，结果是一样的
         print(Vector2.Reflect(Vector2.one, Vector2.down));
+        print(Vector2.Reflect(Vector2.one, Vector2.up));
+
+        print("SignedAngle");
+        print(Vector2.SignedAngle(Vector2.right, Vector2.one));
+        print(Vector2.SignedAngle(Vector2.one, Vector2.right));
+
         moveStart = MoveTowardsCube.position;
     }
 
