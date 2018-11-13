@@ -8,7 +8,11 @@ namespace 继承测试
 {
     class SonClass:FatherClass
     {
-
+        private int x = 0;
+        public SonClass()
+        {
+            
+        }
 
     }
 }

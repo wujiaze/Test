@@ -9,7 +9,11 @@ namespace 继承测试
     class FatherClass:BaseClass
     {
         public List<int> publist=new List<int>(); // 测试说明:公共字段，在继承时，子类 会 new 一个新对象
-        
+
+        public FatherClass()
+        {
+            
+        }
         public override void Start()
         {
             Console.WriteLine("111");

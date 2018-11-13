@@ -39,6 +39,7 @@ public class TransformTest : MonoBehaviour
         {
             print(temp.name);
         }
+        // 不能用 for 循环
     }
 	
 	// Update is called once per frame
