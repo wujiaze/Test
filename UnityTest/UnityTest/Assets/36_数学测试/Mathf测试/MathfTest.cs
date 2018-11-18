@@ -50,7 +50,7 @@
  *                                                                  原理 ： 插值 = value-from/ to-from，然后再使用 Mathf.Clamp01 进行限制
  *
  *              2.2、曲线变换
- *                      Mathf.Repeat(t,length)                      周期性重复或者说周期性限制  每当 t 大于等于 length ，就返回 t % length
+ *                      Mathf.Repeat(t,length)                      周期性重复或者说周期性限制  每当 t 大于等于 length ，就返回 t % length, 负数正数和int，float 都可以
  *
  *                      Mathf.PingPong                              周期性重复(曲线类似乒乓)
  *                                                                  原理 ： 内部就是 Mathf.Repeat ，外加一些处理
@@ -109,6 +109,15 @@ public class MathfTest : MonoBehaviour
     private float target = 10;
     private float currentVelocity = 0;
     private float timersmoothStep = 0;
+
+    private void Awake()
+    {
+       print(Mathf.Floor(-1 / 5f)); 
+       print(Mathf.Repeat(-1, 5));
+    }
+
+
+
     void Update()
     {
         // Lerp 用法 

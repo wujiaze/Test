@@ -39,6 +39,9 @@ namespace 继承测试
         public void Showrilist()
         {
             Console.WriteLine(priList.Count);
+           
         }
+        
+        
     }
 }

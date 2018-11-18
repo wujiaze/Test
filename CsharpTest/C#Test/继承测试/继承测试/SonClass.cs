@@ -13,6 +13,9 @@ namespace 继承测试
         {
             
         }
-
+        protected void Fa()
+        {
+            Console.WriteLine("fa");
+        }
     }
 }

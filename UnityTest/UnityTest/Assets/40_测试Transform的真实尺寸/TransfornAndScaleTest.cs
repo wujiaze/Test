@@ -24,10 +24,10 @@
  *                  meshRenderer.sprite.rect
  *      三、UI
  *          获取Sprite尺寸
- *              image._2D.rect  不受打包影响，不随image组件改变
+ *              sprite.rect  不受打包影响，不随image组件改变
  *          获取Image尺寸
- *              image.rectTransform.sizeDelta  不受 Transform 影响
- *          所以，要计算真实尺寸时： image.rectTransform.sizeDelta * Tranform.scale
+ *              image.rectTransform.rect  不受 Transform 影响 和 锚点影响
+ *          所以，要计算真实尺寸时： image.rectTransform.rect.size * Tranform.scale
  *
  *          特别注意：sprite的尺寸和 Image组件的尺寸没有关联，但是一般都让 Image 和 sprite 相匹配
  *
@@ -113,7 +113,8 @@ public class TransfornAndScaleTest : MonoBehaviour
         {
             // Image 组件
             print(image.rectTransform.rect);        // 自身矩形的size，不受 Transform(位置、旋转、Sclae)无关
-            print(image.rectTransform.sizeDelta);   // 自身矩形的size，不受 Transform(位置、旋转、Sclae)无关
+            print(image.rectTransform.rect.size);
+            print(image.rectTransform.sizeDelta);   // 自身矩形的size，不受 Transform(位置、旋转、Sclae)无关，但是受 锚点影响
             // Sprite
             Sprite sprite = image.sprite;
             print(sprite.bounds);
