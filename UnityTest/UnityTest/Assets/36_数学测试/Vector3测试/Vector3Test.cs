@@ -3,7 +3,7 @@
  *       基础
  *         代数
  *          向量点乘  (a1,b1,c1,d1,....) * (a2,b2,c2,d2,....) = a1*a2 + b1*b2 + c1*c2 + d1*d2....
- *          三维向量叉乘 (a1,a2,a3) x (b1,b2,b3) = (a2*b3 - a3*b2,a3*b1-a1*b3,a1*b2-a2*b1)  获取代数式 https://en.wikipedia.org/wiki/Cross_product
+ *          三维向量叉乘 (a1,a2,a3) x (b1,b2,b3) = (a2*b3-a3*b2,a3*b1-a1*b3,a1*b2-a2*b1)  数学原理 https://en.wikipedia.org/wiki/Cross_product
  *         例子:
  *          当两个相同的向量叉乘：(a2*a3-a3*a2,a3*a1-a1*a3,a1*a2-a2*a1) = (0,0,0)
  *          当两个相反的向量叉乘：(a2*-a3 -a3 *-a2,a3*-a1 -a1*-a3,a1*-a2-a2*-a1) =（0,0,0）
@@ -163,7 +163,7 @@ public class Vector3Test : MonoBehaviour
         // slerp 球形插值
         slerptimer += Time.deltaTime * speed;
         Vector3 center = (sunrise + sunset) * 0.5F;
-        center -= new Vector3(0, 1, 0);         // 防止中心点为0
+        center -= new Vector3(0, 1, 0);         // 防止中心点为(0,0,0)
         Vector3 riseRelCenter = sunrise - center;
         Vector3 setRelCenter = sunset - center;
         sun.position = Vector3.Slerp(riseRelCenter, setRelCenter, slerptimer);

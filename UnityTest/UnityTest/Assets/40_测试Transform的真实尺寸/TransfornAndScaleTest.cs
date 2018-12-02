@@ -114,7 +114,7 @@ public class TransfornAndScaleTest : MonoBehaviour
             // Image 组件
             print(image.rectTransform.rect);        // 自身矩形的size，不受 Transform(位置、旋转、Sclae)无关
             print(image.rectTransform.rect.size);
-            print(image.rectTransform.sizeDelta);   // 不受 Transform(位置、旋转、Sclae)无关，但是受锚点影响，仅代表当前锚点下的X Y
+            print(image.rectTransform.sizeDelta);   // 不受 Transform(位置、旋转、Sclae)无关，但是受锚点影响
             // Sprite
             Sprite sprite = image.sprite;
             print(sprite.bounds);
