@@ -22,7 +22,14 @@
  *    sizeDelta的值不受 Transform 的影响
  *
  *    向量理解(推荐)
- *  
+ *      Anchors(锚框)是向量
+ *          向量的坐标系是：以父对象的左下角为原点(0,0), 右上角为最大值(1,1)
+ *          AnchorsMin 是 原点指向左下锚点的向量，也就是左下锚点的坐标
+ *          AnchorsMax 是 原点指向右上锚点的向量，也就是右上锚点的坐标
+ *      锚框的中心点：
+ *      Pivot 中心点也是向量
+ *          向量的坐标系是：自身对象的左下角为原点(0,0), 右上角为(1,1)
+ *      anchoredPosition： 
  */
 using UnityEngine;
 public class TestRectTransform : MonoBehaviour
@@ -33,6 +40,8 @@ public class TestRectTransform : MonoBehaviour
     public RectTransform ImgRect3; // 锚点是四个点
 
     public RectTransform ImgRect4;
+
+    public RectTransform ImgRect5;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
@@ -75,5 +84,6 @@ public class TestRectTransform : MonoBehaviour
 
             //ImgRect1.SetInsetAndSizeFromParentEdge();
         }
+        print(ImgRect5.anchoredPosition);
     }
 }
