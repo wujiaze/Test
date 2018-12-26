@@ -22,9 +22,14 @@
  *                  注意：1、父物体 localScale 改变时，不改变子物体的 localScale，只改变子物体的 lossyScale
  *                       2、子物体 lossyScale 经过上述变换数据会取近似值(比如父物体localScale=0.1125，结果为0.1)，导致失真
  *      
- *      提示:游戏对象面板上的值：都是本地坐标系的值
- *  总结： 世界坐标系下的 lossyScale = Canvas的lossyScale * 每个子物体的 localScale
+ *     
+ *  总结：  世界坐标系下的 lossyScale = Canvas的lossyScale * 每个子物体的 localScale
  *         本地坐标系下的 localScale = 子物体lossyScale / 每个子物体的 localScale
+ *
+ *          所以当某个父物体 localScale =0，那么这个之后的子物体的 lossyScale 都等于0，所以之后的 子物体本地坐标localScale 计算就全是0了
+ *   提示:游戏对象面板上的值：都是本地坐标系的值
+ *       从数学上来讲，就是 相对坐标和绝对坐标之间的转换  绝对坐标 = 参考值*相对坐标
+ *                                                    相对坐标 = 参考值/相对坐标
  */
 using UnityEngine;
 
