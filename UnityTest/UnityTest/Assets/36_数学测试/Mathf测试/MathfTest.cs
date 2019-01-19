@@ -31,7 +31,7 @@
  *                      Mathf.Log10                                 取对数 f: 值     对数的底为10
  *                      Mathf.Pow                                   取指数 f: 底  p: 指数
  *                      Mathf.Sqrt                                  开方数(小于0，返回NaN)
- *                      Mathf.Round                                 返回最近的数，当0.5结尾时，返回最近的两个数之中的偶数
+ *                      Mathf.Round                                 返回最近的整数(但类型不变)，当0.5结尾时，返回最近的两个数之中的偶数
  *                      Mathf.RoundToInt                            返回值转换为Int
  *              1.4、数值处理
  *                      Mathf.Max                                   最大值(两个数，一个数组)
@@ -112,6 +112,7 @@ public class MathfTest : MonoBehaviour
 
     private void Awake()
     {
+       
        print(Mathf.Floor(-1 / 5f)); 
        print(Mathf.Repeat(-1, 5));
     }
@@ -120,6 +121,7 @@ public class MathfTest : MonoBehaviour
 
     void Update()
     {
+        
         // Lerp 用法 
         timer += Time.deltaTime * speed;                                                            // 1/speed 秒完成线性插值，因为 Time.deltaTime 累加在1s时间中就是1，即完成线性插值
                                                                                                     // 现在 累加的速度 变成 speed 倍，那么完成时间是1秒的 1/speed 倍
