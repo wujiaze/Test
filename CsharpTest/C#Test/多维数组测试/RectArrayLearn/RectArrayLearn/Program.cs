@@ -40,6 +40,8 @@ namespace RectArrayLearn
                 }
             }
 
+
+
             Console.WriteLine("交错数组");
             // 交错数组:一个数组的元素都是数组
             int[][] intArr2 = new int[3][]
