@@ -1,35 +1,46 @@
 ﻿/*
- *   介绍1：  SetParent (Transform parent, bool worldPositionStays);
+ *  前提： 相对坐标和绝对坐标之间的转换  绝对坐标 = 参考值*相对坐标
+ *                                    相对坐标 = 参考值/相对坐标
+ *  Scale
+ *      两个概念
+ *          localScale
+ *              1、localScale      直接改变
+ *              2、SetParent(true) 间接改变         
+ *          lossyScale
+ *              1、任何一个对象的默认初始为 1
+ *              2、通过改变 localScale 间接改变
+ *      一个计算公式
+ *          自身当前 lossyScale = 默认初始值1 * 自身localScale * 父物体1 localScale * 父物体2 localScale ...
+ *              注意：1、每一次物体的改变(比如：生成、改变父物体)，都会计算一遍整个式子
+ *                    2、这个方法会导致失真，比如：某一父物体localScale=0.1125，但被近似为0.1，导致最后结果失真
+ *      一个面板显示
+ *          属性面板上看到的 Scale 都是 localScale
+ *
+ *
+ *
+ *   SetParent (Transform parent, bool worldPositionStays);
  *              参数1：parent  新父物体
  *              参数2：worldPositionStays
- *              默认是true   不改变子物体的 lossyScale，通过新父物体的 localScale，改变子物体 localScale
- *               false       不改变子物体的 localScale，通过新父物体的 localScale，改变子物体 lossyScale
- *           总结：
- *               true： 子物体原来的 lossyScale = (固定参考物Canvas的lossyScale*)子物体新的 localScale * 新父物体1 localScale  * 新父物体1的父物体的 localScale * ...递归
- *                      计算公式：子物体localScale = 子物体lossyScale /  新父物体1 localScale / 新父物体1的父物体的 localScale / ...
- *                               条件：子物体的lossyScale ，在true参数时保持不变
- *              false：子物体新的 lossyScale = (固定参考物Canvas的lossyScale*) 子物体原来的 localScale * 新父物体1 localScale * 新父物体1的父物体的 localScale * ...递归
- *                      计算公式：子物体 lossyScale = 子物体 localScale  *  新父物体1 localScale * 新父物体1的父物体的 localScale * ...
- *                               条件：子物体的 localScale ，在 false 参数时保持不变
- *   介绍2：localScale 改变方式
- *          1、手动改变
- *          2、通过  SetParent 改变
- *          3、其余情况不变          
- *   介绍3: lossyScale 改变方式
- *          1、全局 lossyScale 不可手动设置
- *          2、通过改变localScale,间接改变。
- *                  近似计算公式：子物体lossyScale = (固定参考物Canvas *)子物体localScale * 父物体1 localScale * 父物体2 localScale *...递归
- *                  注意：1、父物体 localScale 改变时，不改变子物体的 localScale，只改变子物体的 lossyScale
- *                       2、子物体 lossyScale 经过上述变换数据会取近似值(比如父物体localScale=0.1125，结果为0.1)，导致失真
- *      
- *     
- *  总结：  世界坐标系下的 lossyScale = Canvas的lossyScale * 每个子物体的 localScale
- *         本地坐标系下的 localScale = 子物体lossyScale / 每个子物体的 localScale
+ *                      true(默认)  不改变方法执行前子物体的 lossyScale
+ *                      false       不改变方法执行前子物体的 localScale
+ *              具体分析：
+ *                          子物体执行前的 lossyScaleA = 默认初始值1 * 子物体执行前的 localScaleA * 父物体 localScaleA  * 父物体的父物体 localScaleA...
+ *                          子物体执行后的 lossyScaleB = 默认初始值1 * 子物体执行后的 localScaleB * 新父物体 localScaleB  * 新父物体的父物体 localScaleB...
+ *                  true：  执行后的 lossyScaleB = 执行前的 lossyScaleA
+ *                          求得：子物体执行后的 localScaleB = 子物体执行前的 lossyScaleA /  新父物体 localScaleB / 新父物体的父物体 localScaleB / ...
+ *                  false： 执行后的 localScaleB = 执行前的 localScaleA
+ *                          求得：子物体执行后的 lossyScaleB = 默认初始值1 * 执行前的 localScaleA  *  新父物体 localScaleB * 新父物体的父物体 localScaleB ...
  *
- *          所以当某个父物体 localScale =0，那么这个之后的子物体的 lossyScale 都等于0，所以之后的 子物体本地坐标localScale 计算就全是0了
- *   提示:游戏对象面板上的值：都是本地坐标系的值
- *       从数学上来讲，就是 相对坐标和绝对坐标之间的转换  绝对坐标 = 参考值*相对坐标
- *                                                    相对坐标 = 参考值/相对坐标
+ *              特殊情况：当某个父物体 localScale = 0 
+ *                          true :  localScale = 0
+ *                                  lossyScale = 0（看不到了）
+ *                          false:  localScale = 原来的scale
+ *                                  lossyScale = 0（看不到了）
+ *                      解决方法:
+ *                              1、针对第二次SetParent后，物体需要时原来的样子，那么可以是第一次采用 false ，第二次也采用false
+ *              总结： lossyScale = 默认值1 * 每个子物体的 localScale
+ *                    localScale = 默认值1  / 每个子物体的 localScale
+ *  
  */
 using UnityEngine;
 
@@ -143,7 +154,7 @@ public class ChangeUIParentScale : MonoBehaviour
             /* 特殊情况*/
             print("子物体的本地Scale" + Son3.localScale);
             print("子物体的全局Scale" + Son3.lossyScale);
-            Parent5.localScale = Vector3.zero;   
+            Parent5.localScale = Vector3.zero;
             print("Parent5 父物体的本地Scale" + Parent5.localScale);
             print("Parent5 父物体的全局Scale" + Parent5.lossyScale);
             Son3.SetParent(Parent5);
@@ -160,10 +171,10 @@ public class ChangeUIParentScale : MonoBehaviour
             Son3.SetParent(Parent5);
             print("子物体的本地Scale" + Son3.localScale);
             print("子物体的全局Scale" + Son3.lossyScale); //(1,1,1)
-            Parent5.localScale = Vector3.zero;  
+            Parent5.localScale = Vector3.zero;
             print("Parent5 父物体的本地Scale" + Parent5.localScale);
             print("Parent5 父物体的全局Scale" + Parent5.lossyScale);
-            
+
             //
             print("子物体的本地Scale" + Son3.localScale);
             // lossyScale = 1*1*0 =0
@@ -174,29 +185,29 @@ public class ChangeUIParentScale : MonoBehaviour
             /* 特殊情况*/
             print("子物体的本地Scale" + Son3.localScale);
             print("子物体的全局Scale" + Son3.lossyScale);
-            Parent5.localScale = Vector3.zero;  
+            Parent5.localScale = Vector3.zero;
             print("Parent5 父物体的本地Scale" + Parent5.localScale);
             print("Parent5 父物体的全局Scale" + Parent5.lossyScale);
-            Son3.SetParent(Parent5,false);
+            Son3.SetParent(Parent5, false);
             print("子物体的本地Scale" + Son3.localScale);
-            print("子物体的全局Scale" + Son3.lossyScale); 
+            print("子物体的全局Scale" + Son3.lossyScale);
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
             /* 特殊情况*/
             print("子物体的本地Scale" + Son3.localScale);
             print("子物体的全局Scale" + Son3.lossyScale);
-            Son3.SetParent(Parent5,false);
+            Son3.SetParent(Parent5, false);
             print("子物体的本地Scale" + Son3.localScale);
-            print("子物体的全局Scale" + Son3.lossyScale); 
-            Parent5.localScale = Vector3.zero;  
+            print("子物体的全局Scale" + Son3.lossyScale);
+            Parent5.localScale = Vector3.zero;
             print("Parent5 父物体的本地Scale" + Parent5.localScale);
             print("Parent5 父物体的全局Scale" + Parent5.lossyScale);
 
             //
             print("子物体的本地Scale" + Son3.localScale);
             // lossyScale = 1*1*0 =0
-            print("子物体的全局Scale" + Son3.lossyScale); 
+            print("子物体的全局Scale" + Son3.lossyScale);
         }
     }
 }
